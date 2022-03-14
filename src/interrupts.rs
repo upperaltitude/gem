@@ -6,11 +6,11 @@
 
 use x86_64::structures::idt::InterruptDescriptorTable; // We are using the InterruptDescriptorTable struct of the x86_64 crate.
 use x86_64::structures::idt::InterruptStackFrame;
-use crate::println;
 use lazy_static::lazy_static;
 use pic8259::ChainedPics;
 use spin;
 use crate::print;
+use crate::println;
 
 /*************************
  *          PICs         *
@@ -42,8 +42,7 @@ impl InterruptIndex {
     }
 }
 
-extern "x86-interrupt" fn timer_interrupt_handler(
-    _stack_frame: InterruptStackFrame)
+extern "x86-interrupt" fn timer_interrupt_handler(_stack_frame: InterruptStackFrame)
 {
     print!(".");
 
@@ -77,6 +76,8 @@ lazy_static! {
 
 // Exposes the IDT.load() method.
 pub fn init_idt() {
+    println!("Initializing Hardware Interrupts...");
+
     IDT.load();
 }
 

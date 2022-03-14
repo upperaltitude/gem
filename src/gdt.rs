@@ -1,4 +1,9 @@
-
+/*
+ * Gem Research Operating System
+ * The Global Descriptor Table
+ * © 2022 Upper Altitude
+ */
+ 
 use x86_64::VirtAddr;
 use x86_64::structures::tss::TaskStateSegment;
 use x86_64::structures::gdt::{GlobalDescriptorTable, Descriptor};
