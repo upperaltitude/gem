@@ -25,7 +25,12 @@ pub extern "C" fn _start() -> ! {
     gem::init();
 
     // Invoke a breakpoint exception.
-    x86_64::instructions::interrupts::int3();
+    // x86_64::instructions::interrupts::int3();
+
+    // trigger a page fault
+    unsafe {
+        *(0xdeadbeef as *mut u64) = 42;
+    };
 
     // panic!("Some panic message");
 
