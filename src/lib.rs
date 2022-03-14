@@ -17,4 +17,6 @@ pub mod vga_buffer;
 pub fn init() {
     gdt::init();
 	interrupts::init_idt();
+    unsafe { interrupts::PICS.lock().initialize() }; // Unsafe because it can cause undefined behavior if the PIC is misconfigured.
+    x86_64::instructions::interrupts::enable();
 }
