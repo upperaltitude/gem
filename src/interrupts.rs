@@ -30,6 +30,7 @@ pub static PICS: spin::Mutex<ChainedPics> =
 #[repr(u8)]
 pub enum InterruptIndex {
     Timer = PIC_1_OFFSET,
+    Keyboard,
 }
 
 impl InterruptIndex {
@@ -44,11 +45,29 @@ impl InterruptIndex {
 
 extern "x86-interrupt" fn timer_interrupt_handler(_stack_frame: InterruptStackFrame)
 {
-    print!(".");
+    // println!("Timer interrupt received!");
 
     unsafe {
         // Notify the PIC that the interrupt was processed and that we're ready for the next one.
         PICS.lock().notify_end_of_interrupt(InterruptIndex::Timer.as_u8());
+    }
+}
+
+extern "x86-interrupt" fn keyboard_interrupt_handler(_stack_frame: InterruptStackFrame)
+{
+    use x86_64::instructions::port::Port;
+
+    // Read the scancode from the PS/2 controller dataport (0x60).
+    let mut port = Port::new(0x60);
+    let scancode: u8 = unsafe {
+        port.read()
+    };
+
+    println!("Keyboard interrupt received! Scancode: {}", scancode);
+
+    unsafe {
+        // Notify the PIC that the interrupt was processed and that we're ready for the next one.
+        PICS.lock().notify_end_of_interrupt(InterruptIndex::Keyboard.as_u8());
     }
 }
 
@@ -69,6 +88,7 @@ lazy_static! {
 
         // Include Interrupts.
         idt[InterruptIndex::Timer.as_usize()].set_handler_fn(timer_interrupt_handler);
+        idt[InterruptIndex::Keyboard.as_usize()].set_handler_fn(keyboard_interrupt_handler);
 
         idt
     };
