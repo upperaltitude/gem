@@ -12,7 +12,10 @@ use core::panic::PanicInfo;
 mod vga_buffer;
 
 #[panic_handler]
-fn panic(_info: &PanicInfo) -> ! {
+fn panic(info: &PanicInfo) -> ! {
+    // Print panic message.
+    println!("{}", info);
+
     loop {}
 }
 
@@ -21,6 +24,7 @@ static HELLO: &[u8] = b"Welcome to Gem.";
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
     println!("Hello World{}", "!");
+    panic!("Some panic message");
 
     loop {}
 }
