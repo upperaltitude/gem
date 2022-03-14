@@ -1,1 +1,5 @@
+# OS files
+.DS_Store
+
+# Built files
 /target
