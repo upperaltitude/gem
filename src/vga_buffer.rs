@@ -11,17 +11,16 @@ use volatile::Volatile;
 
 lazy_static! {
     // A global `Writer` instance that can be used for printing to the VGA text buffer.
-    //
     // Used by the `print!` and `println!` macros.
     pub static ref WRITER: Mutex<Writer> = Mutex::new(Writer {
         column_position: 0,
-        color_code: ColorCode::new(Color::Yellow, Color::Black),
+        color_code: ColorCode::new(Color::LightCyan, Color::Black),
         buffer: unsafe { &mut *(0xb8000 as *mut Buffer) },
     });
 }
 
 /*************************
- *         Colors
+ *         Colors        *
  *************************/
 
 // Represent the available VGA colors.

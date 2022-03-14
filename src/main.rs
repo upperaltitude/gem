@@ -8,8 +8,7 @@
 #![no_main] // Disable all Rust-level entry points.
 
 use core::panic::PanicInfo;
-
-mod vga_buffer;
+use gem::println;
 
 #[panic_handler]
 fn panic(info: &PanicInfo) -> ! {
@@ -19,12 +18,18 @@ fn panic(info: &PanicInfo) -> ! {
     loop {}
 }
 
-static HELLO: &[u8] = b"Welcome to Gem.";
-
 #[no_mangle]
 pub extern "C" fn _start() -> ! {
-    println!("Hello World{}", "!");
-    panic!("Some panic message");
+    println!("Welcome to Gem.");
+
+    gem::init();
+
+    // Invoke a breakpoint exception.
+    x86_64::instructions::interrupts::int3();
+
+    // panic!("Some panic message");
+
+    println!("Gem is still running...");
 
     loop {}
 }
