@@ -14,8 +14,9 @@ use gem::println;
 fn panic(info: &PanicInfo) -> ! {
     // Print panic message.
     println!("{}", info);
-
-    loop {}
+    
+    // Halt CPU until the next interrupt arrives.
+    gem::hlt_loop();
 }
 
 #[no_mangle]
@@ -37,5 +38,6 @@ pub extern "C" fn _start() -> ! {
 
     println!("Gem is still running...");
 
-    loop {}
+    // Halt CPU until the next interrupt arrives.
+    gem::hlt_loop();
 }
